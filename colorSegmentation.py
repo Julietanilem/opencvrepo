@@ -27,6 +27,8 @@ else:
     while (img.isOpened()):
         ret, frame = img.read()
         cv.imshow('webCam', frame)
+        upperColor = np.array([40, 255, 255])
+        lowerColor= np.array([0, 100, 0])
         colorDetected = cv.inRange(frame, lowerColor,upperColor)
         cv.imshow("COLOR", colorDetected)
         if (cv.waitKey(1) == ord('e')):
