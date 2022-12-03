@@ -25,18 +25,22 @@ def main():
     centroide=False
     myTwist = Twist()
     numPixels=0
+    change =0
     while not rospy.is_shutdown():
         if centroide:
-            angular_vel  = screenCenter[0] - centroide[0] 
+            
             if centroide[2] !=0 : 
-                myTwist.angular.z=angular_vel*0.001
-                print(centroide[2])
-                if int(centroide[2]/10) < 6:   
-                    myTwist.linear.x = +1
-                elif int(centroide[2]/10) > 8: 
-                    myTwist.linear.x = -1
-                else:
-                    myTwist.linear.x = 0
+                angular_vel  = screenCenter[0] - centroide[0] 
+                if change-300>centroide[2] or change+300<centroide[2]:
+                    myTwist.angular.z=angular_vel*0.001
+                    print(centroide[2])
+                    if int(centroide[2]/100) < 20:   
+                        myTwist.linear.x = +1
+                    elif int(centroide[2]/100) > 36: 
+                        myTwist.linear.x = -1
+                    else:
+                        myTwist.linear.x = 0
+                    change=centroide[2]
                
             else:
                 myTwist.angular.z=0

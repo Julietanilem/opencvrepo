@@ -22,9 +22,9 @@ def callback_cam(msg):
 
 def main():
     rospy.init_node("ejercicio01")
-    rospy.Subscriber("/hardware/realsense/rgb/image_raw", Image, callback_cam)
+    rospy.Subscriber("/hsrb/head_rgbd_sensor/rgb/image_raw", Image, callback_cam)
     pub_centroid = rospy.Publisher(
-        "/centroide", Int16MultiArray, queue_size=10) 
+        "/centroide", Int16MultiArray, queue_size = 10) 
         
     global image,  imgExist
     image = 2
@@ -33,13 +33,21 @@ def main():
     imgExist=False
     myArray=Int16MultiArray()
     #Funcionan
-    upperYellow = np.array([35, 255, 255])
-    lowerYellow= np.array([4, 122, 5])
+    upperYellow = np.array([50, 255, 255])
+    lowerYellow = np.array([10, 70, 0])
 
     print(lowerYellow)
     while not rospy.is_shutdown():
         if imgExist==True:
-            yellowPixelsDetected = cv.inRange(image,lowerYellow, upperYellow)
+            yellowPixelsImg = cv.inRange(image,lowerYellow, upperYellow)
+            erosion_size = 5
+            erosion_shape = cv.MORPH_RECT
+            element = cv.getStructuringElement(erosion_shape, (2 * erosion_size + 1, 2 * erosion_size + 1),
+                                            (erosion_size, erosion_size))
+    
+            imgDila = cv.dilate(yellowPixelsImg, element)
+            yellowPixelsDetected= cv.dilate( imgDila, element)
+           
             xCount = 0
             yCount=0
             colorPixelsCount=0
