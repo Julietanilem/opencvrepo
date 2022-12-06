@@ -35,9 +35,9 @@ def main():
                     myTwist.angular.z=angular_vel*0.001
                     print(centroide[2])
                     if int(centroide[2]/100) < 20:   
-                        myTwist.linear.x = +1
+                        myTwist.linear.x = 0.5
                     elif int(centroide[2]/100) > 36: 
-                        myTwist.linear.x = -1
+                        myTwist.linear.x = -0.5
                     else:
                         myTwist.linear.x = 0
                     change=centroide[2]

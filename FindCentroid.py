@@ -33,27 +33,33 @@ def main():
     imgExist=False
     myArray=Int16MultiArray()
     #Funcionan
-    upperYellow = np.array([50, 255, 255])
-    lowerYellow = np.array([10, 70, 0])
+    upperRed = np.array([100, 75, 255])
+    lowerRed = np.array([50, 60, 200])
 
-    print(lowerYellow)
+    colorRGB = np.uint8([[[0,255,0 ]]])
+    colorRGB2 = np.uint8([[[0,255,0 ]]])
+    colorHSV = cv.cvtColor(colorRGB, cv.COLOR_BGR2HSV)
+    colorHSV2 = cv.cvtColor(colorRGB2, cv.COLOR_BGR2HSV)
+    print(colorHSV)
+    print(colorHSV2)
     while not rospy.is_shutdown():
         if imgExist==True:
-            yellowPixelsImg = cv.inRange(image,lowerYellow, upperYellow)
-            erosion_size = 5
+            redPixelsImg = cv.inRange(image,lowerRed, upperRed)
+            erosion_size = 2
             erosion_shape = cv.MORPH_RECT
             element = cv.getStructuringElement(erosion_shape, (2 * erosion_size + 1, 2 * erosion_size + 1),
                                             (erosion_size, erosion_size))
     
-            imgDila = cv.dilate(yellowPixelsImg, element)
-            yellowPixelsDetected= cv.dilate( imgDila, element)
+           
+            imgDila = cv.dilate(redPixelsImg, element)
+            redPixelsDetected= cv.dilate( imgDila, element)
            
             xCount = 0
             yCount=0
             colorPixelsCount=0
-            for  x in range(yellowPixelsDetected.shape[0]):
-                for y in range(yellowPixelsDetected.shape[1]):  
-                    if yellowPixelsDetected[x,y] == 255:
+            for  x in range(redPixelsDetected.shape[0]):
+                for y in range(redPixelsDetected.shape[1]):  
+                    if redPixelsDetected[x,y] == 255:
                         yCount+=x
                         xCount+=y
                         colorPixelsCount+=1
@@ -66,7 +72,7 @@ def main():
             else:
                 centroid = [0, 0,0]
                 print("No hay pixeles amarillos")
-            cv.imshow("Vista amarillos", yellowPixelsDetected)
+            cv.imshow("Vista amarillos", redPixelsDetected)
             cv.imshow("Vista normal", image)
             cv.waitKey(1)
             myArray.data = centroid
